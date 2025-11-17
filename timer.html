@@ -12,7 +12,6 @@
         }
 
         :root {
-            /* Bubblegum (light mode) */
             --pink: #FFB3D9;
             --pink-soft: #FFC9E3;
             --pink-neon: #FF69B4;
@@ -22,12 +21,10 @@
             --turquoise-neon: #00CED1;
             --text: #8B4F6F;
             --text-dark: #6B3555;
-            --border: #FFE0ED;
             --bg-gradient: linear-gradient(135deg, #FFC9E3 0%, #FFFFFF 50%, #40E0D0 100%);
         }
 
         body.dark {
-            /* Candy Raver (dark mode) */
             --pink: #FF69B4;
             --pink-soft: #FFB3D9;
             --pink-neon: #ff1493;
@@ -37,7 +34,6 @@
             --turquoise-neon: #0FF0FC;
             --text: #FFB3D9;
             --text-dark: #FF69B4;
-            --border: #ff1493;
             --bg-gradient: linear-gradient(135deg, #1A1A2E 0%, #0F3460 50%, #16213E 100%);
         }
 
@@ -156,6 +152,7 @@
             padding: 10px 15px;
             font-size: 0.9em;
             min-width: 80px;
+            position: relative;
         }
 
         button.track.active {
@@ -163,6 +160,56 @@
             box-shadow: 0 4px 15px rgba(0, 206, 209, 0.5);
             color: var(--white);
             border: 2px solid var(--turquoise);
+        }
+
+        button.track .delete-btn {
+            display: none;
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--pink-neon);
+            color: var(--white);
+            border: 2px solid var(--white);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 1em;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(255, 20, 147, 0.4);
+        }
+
+        button.track:hover .delete-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button.track .delete-btn:hover::after {
+            content: 'Delete track';
+            position: absolute;
+            top: -30px;
+            right: 0;
+            background: var(--text-dark);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.75em;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            animation: tooltipFadeIn 0.2s ease forwards;
+            animation-delay: 1.5s;
+            opacity: 0;
+        }
+
+        @keyframes tooltipFadeIn {
+            to { opacity: 1; }
+        }
+
+        body.dark button.track .delete-btn:hover::after {
+            background: #ADD8E6;
+            color: #1A1A2E;
         }
 
         .theme-toggle {
@@ -253,7 +300,7 @@
             font-size: 1.5em;
             margin: 20px 0;
             font-weight: bold;
-            animation: fadeIn 0.5s;
+            animation: fadeIn 0.5s ease;
         }
 
         .break-message.show {
@@ -263,6 +310,74 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-overlay.show {
+            display: flex;
+        }
+
+        .popup {
+            background: var(--white);
+            border: 3px solid var(--pink-neon);
+            border-radius: 20px;
+            padding: 30px 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.5);
+            animation: popupBounce 0.3s ease;
+        }
+
+        @keyframes popupBounce {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .popup-message {
+            color: var(--pink-neon);
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        body.dark .popup-message {
+            color: #00FFFF;
+        }
+
+        .popup-button {
+            background: linear-gradient(135deg, var(--pink) 0%, var(--pink-neon) 100%);
+            color: var(--white);
+            border: none;
+            padding: 10px 30px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+
+        .popup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        .loading {
+            color: var(--turquoise-neon);
+            font-size: 0.9em;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -280,18 +395,20 @@
         <div class="input-group">
             <label>Repeat Until:</label>
             <div class="input-row">
-                <input type="number" id="repeatHours" class="small" value="0" min="0" max="99">
+                <input type="number" class="small" id="repeatHours" value="0" min="0" max="24">
                 <span class="inline-label">hours</span>
-                <input type="number" id="repeatMinutes" class="small" value="0" min="0" max="59">
+                <input type="number" class="small" id="repeatMinutes" value="0" min="0" max="1440">
                 <span class="inline-label">minutes</span>
             </div>
-            <div class="repeat-info" id="repeatInfo"></div>
+            <div class="repeat-info" id="repeatInfo">Single timer (no repeat)</div>
         </div>
 
         <div class="timer-display" id="display">6:00</div>
 
         <div class="controls">
             <div id="trackButtons"></div>
+            <input type="file" id="audioUpload" accept="audio/*" style="display: none;">
+            <button class="track" onclick="document.getElementById('audioUpload').click()">+ Add Track</button>
             <button class="test" id="testBtn">Test Sound</button>
         </div>
 
@@ -304,88 +421,161 @@
         <div class="break-message" id="breakMessage">✨ Zoom out and breathe ✨</div>
         <div class="status" id="status">Ready</div>
         <div class="status" id="cycleStatus"></div>
+        <div class="loading" id="loading"></div>
+    </div>
+
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <div class="popup-message" id="popupMessage"></div>
+            <button class="popup-button" onclick="closePopup()">OK</button>
+        </div>
     </div>
 
     <script>
-        // ===== Configuration =====
-        const AUDIO_TRACKS = [
-            'lofi-beat-by-syd.m4a',  // Track 1
-         //  'track2.mp3',             // Track 2
-         //  'track3.mp3',             // Track 3
-         //   'track4.mp3',             // Track 4
-         //   'track5.mp3',             // Track 5
-         //   'track6.mp3'              // Track 6
-        ];
-        let currentTrack = 0; // Default to Track 1
+        const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit
+        const STORAGE_KEY = 'trixieUploadedTracks';
+        const DEFAULT_TRACK = 'makes-sense.m4a';
         
-        // ===== State Variables =====
-        let timeLeft = 360;
-        let timerId = null;
-        let isRunning = false;
-        let audio = null;
-        let isAudioPlaying = false;
-        let pauseTimer = null;
-        let currentCycle = 0;
-        let totalCycles = 0;
+        // State
+        const tracks = [DEFAULT_TRACK];
+        let state = {
+            currentTrack: 0,
+            timeLeft: 360,
+            isRunning: false,
+            currentCycle: 0,
+            totalCycles: 0,
+            audio: null,
+            timerId: null,
+            pauseTimer: null,
+            isAudioPlaying: false
+        };
 
-        // ===== DOM Elements =====
-        const display = document.getElementById('display');
-        const minutesInput = document.getElementById('minutes');
-        const repeatHoursInput = document.getElementById('repeatHours');
-        const repeatMinutesInput = document.getElementById('repeatMinutes');
-        const startBtn = document.getElementById('startBtn');
-        const stopBtn = document.getElementById('stopBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const testBtn = document.getElementById('testBtn');
-        const status = document.getElementById('status');
-        const breakMessage = document.getElementById('breakMessage');
-        const repeatInfo = document.getElementById('repeatInfo');
-        const cycleStatus = document.getElementById('cycleStatus');
-        const themeToggle = document.getElementById('themeToggle');
-        const trackButtonsContainer = document.getElementById('trackButtons');
+        // Cache DOM elements
+        const el = {
+            display: document.getElementById('display'),
+            status: document.getElementById('status'),
+            cycleStatus: document.getElementById('cycleStatus'),
+            breakMessage: document.getElementById('breakMessage'),
+            repeatInfo: document.getElementById('repeatInfo'),
+            trackButtons: document.getElementById('trackButtons'),
+            startBtn: document.getElementById('startBtn'),
+            stopBtn: document.getElementById('stopBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            testBtn: document.getElementById('testBtn'),
+            themeToggle: document.getElementById('themeToggle'),
+            minutesInput: document.getElementById('minutes'),
+            repeatHoursInput: document.getElementById('repeatHours'),
+            repeatMinutesInput: document.getElementById('repeatMinutes'),
+            audioUpload: document.getElementById('audioUpload'),
+            popupOverlay: document.getElementById('popupOverlay'),
+            popupMessage: document.getElementById('popupMessage'),
+            loading: document.getElementById('loading')
+        };
 
-        // ===== Initialize Track Buttons =====
-        function initializeTrackButtons() {
-            AUDIO_TRACKS.forEach((track, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'track';
-                btn.textContent = `Track ${index + 1}`;
-                btn.onclick = () => selectTrack(index);
-                if (index === currentTrack) btn.classList.add('active');
-                trackButtonsContainer.appendChild(btn);
-            });
-        }
-
-        function selectTrack(trackIndex) {
-            currentTrack = trackIndex;
-            // Update button states
-            const trackButtons = trackButtonsContainer.querySelectorAll('.track');
-            trackButtons.forEach((btn, index) => {
-                btn.classList.toggle('active', index === trackIndex);
-            });
-            // Reset audio if currently playing
-            if (audio && isAudioPlaying) {
-                stopAudio();
+        // Load stored tracks
+        function loadStoredTracks() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                JSON.parse(stored).forEach(track => tracks.push(track.url));
             }
         }
 
-        // ===== Theme Functions =====
+        // Save track (returns false if duplicate)
+        function saveTrack(name, url) {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            const data = stored ? JSON.parse(stored) : [];
+            
+            if (data.some(t => t.name === name)) return false;
+            
+            data.push({ name, url });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            return true;
+        }
+
+        // Delete track
+        function deleteTrack(index) {
+            if (index === 0) {
+                el.status.textContent = 'Cannot delete Track 1';
+                return;
+            }
+            
+            if (state.currentTrack === index && state.audio) stopAudio();
+            
+            tracks.splice(index, 1);
+            
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                const data = JSON.parse(stored);
+                data.splice(index - 1, 1);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            }
+            
+            if (state.currentTrack >= index) {
+                state.currentTrack = Math.max(0, state.currentTrack - 1);
+            }
+            
+            renderTrackButtons();
+            el.status.textContent = `Track ${index + 1} deleted`;
+        }
+
+        // Create single track button
+        function createTrackButton(index) {
+            const btn = document.createElement('button');
+            btn.className = 'track';
+            btn.textContent = `Track ${index + 1}`;
+            btn.onclick = () => selectTrack(index);
+            if (index === state.currentTrack) btn.classList.add('active');
+            
+            if (index > 0) {
+                const deleteBtn = document.createElement('span');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = '−';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteTrack(index);
+                };
+                btn.appendChild(deleteBtn);
+            }
+            
+            return btn;
+        }
+
+        // Render all track buttons
+        function renderTrackButtons() {
+            el.trackButtons.innerHTML = '';
+            tracks.forEach((_, index) => {
+                el.trackButtons.appendChild(createTrackButton(index));
+            });
+        }
+
+        // Select track
+        function selectTrack(index) {
+            state.currentTrack = index;
+            
+            Array.from(el.trackButtons.querySelectorAll('.track')).forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            
+            if (state.audio && state.isAudioPlaying) stopAudio();
+        }
+
+        // Theme toggle
         function toggleTheme() {
             document.body.classList.toggle('dark');
             const isDark = document.body.classList.contains('dark');
-            themeToggle.textContent = isDark ? '☀️ Bubblegum' : '🌙 Candy Raver';
-            themeToggle.style.background = isDark ? '#00FFFF' : '';
+            el.themeToggle.textContent = isDark ? '☀️ Bubblegum' : '🌙 Candy Raver';
+            el.themeToggle.style.background = isDark ? '#00FFFF' : '';
         }
 
-        // ===== Calculation Functions =====
+        // Calculate repeat cycles
         function calculateRepeatCycles() {
-            const timerMinutes = parseInt(minutesInput.value) || 6;
-            const hours = parseInt(repeatHoursInput.value) || 0;
-            const minutes = parseInt(repeatMinutesInput.value) || 0;
+            const timerMinutes = parseInt(el.minutesInput.value) || 6;
+            const hours = parseInt(el.repeatHoursInput.value) || 0;
+            const minutes = parseInt(el.repeatMinutesInput.value) || 0;
             const totalRepeatMinutes = (hours * 60) + minutes;
 
             if (totalRepeatMinutes === 0) {
-                repeatInfo.textContent = 'Single timer (no repeat)';
+                el.repeatInfo.textContent = 'Single timer (no repeat)';
                 return 1;
             }
 
@@ -395,202 +585,257 @@
             const actualMins = actualMinutes % 60;
             const timeStr = actualHours > 0 ? `${actualHours}h ${actualMins}m` : `${actualMins}m`;
 
-            repeatInfo.textContent = `${cycles} cycles (${timeStr} total)`;
+            el.repeatInfo.textContent = `${cycles} cycles (${timeStr} total)`;
             return cycles;
         }
 
+        // Update cycle status
         function updateCycleStatus() {
-            cycleStatus.textContent = totalCycles > 1 ? `Cycle ${currentCycle} of ${totalCycles}` : '';
+            el.cycleStatus.textContent = state.totalCycles > 1 
+                ? `Cycle ${state.currentCycle} of ${state.totalCycles}` 
+                : '';
         }
 
+        // Update display
         function updateDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            display.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            const minutes = Math.floor(state.timeLeft / 60);
+            const seconds = state.timeLeft % 60;
+            el.display.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
-            display.classList.remove('warning', 'alarm');
-            if (timeLeft <= 10 && timeLeft > 0) display.classList.add('warning');
-            else if (timeLeft === 0) display.classList.add('alarm');
+            el.display.classList.remove('warning', 'alarm');
+            if (state.timeLeft <= 10 && state.timeLeft > 0) {
+                el.display.classList.add('warning');
+            } else if (state.timeLeft === 0) {
+                el.display.classList.add('alarm');
+            }
         }
 
+        // Play sound
         function playSound() {
-            if (audio) {
-                audio.pause();
-                audio.currentTime = 0;
+            if (state.audio) {
+                state.audio.pause();
+                state.audio.currentTime = 0;
             }
             
-            audio = new Audio();
-            audio.src = AUDIO_TRACKS[currentTrack];
-            
-            const canPlayM4a = audio.canPlayType('audio/mp4');
-            if (!canPlayM4a) {
-                console.warn('Browser may not support m4a format');
-            }
-            
-            audio.play().catch(err => {
+            state.audio = new Audio(tracks[state.currentTrack]);
+            state.audio.play().catch(err => {
                 console.error('Audio playback failed:', err);
-                status.textContent = 'Audio file not found or format not supported';
+                el.status.textContent = 'Audio file not found or format not supported';
             });
         }
 
+        // Stop audio
         function stopAudio() {
-            if (audio) {
-                audio.pause();
-                audio.currentTime = 0;
-                isAudioPlaying = false;
-                testBtn.textContent = 'Test Sound';
-                if (pauseTimer) {
-                    clearTimeout(pauseTimer);
-                    pauseTimer = null;
+            if (state.audio) {
+                state.audio.pause();
+                state.audio.currentTime = 0;
+                state.isAudioPlaying = false;
+                el.testBtn.textContent = 'Test Sound';
+                if (state.pauseTimer) {
+                    clearTimeout(state.pauseTimer);
+                    state.pauseTimer = null;
                 }
             }
         }
 
+        // Toggle test sound
         function toggleTestSound() {
-            if (!audio || audio.paused) {
-                // Start playing
-                if (audio) {
-                    audio.pause();
-                    audio.currentTime = 0;
+            if (!state.audio || state.audio.paused) {
+                if (state.audio) {
+                    state.audio.pause();
+                    state.audio.currentTime = 0;
                 }
                 
-                audio = new Audio();
-                audio.src = AUDIO_TRACKS[currentTrack];
-                
-                audio.play().catch(err => {
+                state.audio = new Audio(tracks[state.currentTrack]);
+                state.audio.play().catch(err => {
                     console.error('Audio playback failed:', err);
-                    status.textContent = 'Audio file not found or format not supported';
+                    el.status.textContent = 'Audio file not found or format not supported';
                     return;
                 });
                 
-                isAudioPlaying = true;
-                testBtn.textContent = 'Stop Test Sound';
+                state.isAudioPlaying = true;
+                el.testBtn.textContent = 'End Test';
                 
-                // Clear any existing pause timer
-                if (pauseTimer) {
-                    clearTimeout(pauseTimer);
-                    pauseTimer = null;
+                if (state.pauseTimer) {
+                    clearTimeout(state.pauseTimer);
+                    state.pauseTimer = null;
                 }
                 
-                // Auto-stop when audio ends
-                audio.onended = () => {
-                    stopAudio();
-                };
+                state.audio.onended = () => stopAudio();
             } else {
-                // Pause
-                audio.pause();
-                isAudioPlaying = false;
-                testBtn.textContent = 'Test Sound';
+                state.audio.pause();
+                state.isAudioPlaying = false;
+                el.testBtn.textContent = 'Test Sound';
                 
-                // Set 10-second timer to reset
-                pauseTimer = setTimeout(() => {
-                    if (audio) {
-                        audio.currentTime = 0;
-                        pauseTimer = null;
+                state.pauseTimer = setTimeout(() => {
+                    if (state.audio) {
+                        state.audio.currentTime = 0;
+                        state.pauseTimer = null;
                     }
                 }, 10000);
             }
         }
 
+        // Start timer
         function startTimer() {
-            if (isRunning) return;
+            if (state.isRunning) return;
 
-            if (currentCycle === 0) {
-                totalCycles = calculateRepeatCycles();
-                currentCycle = 1;
+            if (state.currentCycle === 0) {
+                state.totalCycles = calculateRepeatCycles();
+                state.currentCycle = 1;
                 updateCycleStatus();
             }
 
-            if (timeLeft === 0) timeLeft = (parseInt(minutesInput.value) || 6) * 60;
+            if (state.timeLeft === 0) {
+                state.timeLeft = (parseInt(el.minutesInput.value) || 6) * 60;
+            }
 
-            isRunning = true;
-            startBtn.disabled = true;
-            stopBtn.disabled = false;
-            minutesInput.disabled = true;
-            repeatHoursInput.disabled = true;
-            repeatMinutesInput.disabled = true;
-            status.textContent = 'Running...';
-            breakMessage.classList.remove('show');
+            state.isRunning = true;
+            el.startBtn.disabled = true;
+            el.stopBtn.disabled = false;
+            el.minutesInput.disabled = true;
+            el.repeatHoursInput.disabled = true;
+            el.repeatMinutesInput.disabled = true;
+            el.status.textContent = 'Running...';
+            el.breakMessage.classList.remove('show');
 
-            timerId = setInterval(() => {
-                timeLeft--;
+            state.timerId = setInterval(() => {
+                state.timeLeft--;
                 updateDisplay();
 
-                if (timeLeft <= 0) {
+                if (state.timeLeft <= 0) {
                     stopTimer();
                     playSound();
-                    breakMessage.classList.add('show');
+                    el.breakMessage.classList.add('show');
 
-                    if (currentCycle < totalCycles) {
-                        currentCycle++;
-                        status.textContent = `Cycle ${currentCycle - 1} complete! Starting cycle ${currentCycle}...`;
+                    if (state.currentCycle < state.totalCycles) {
+                        state.currentCycle++;
+                        el.status.textContent = `Cycle ${state.currentCycle - 1} complete! Starting cycle ${state.currentCycle}...`;
                         updateCycleStatus();
 
                         setTimeout(() => {
-                            timeLeft = (parseInt(minutesInput.value) || 6) * 60;
+                            state.timeLeft = (parseInt(el.minutesInput.value) || 6) * 60;
                             updateDisplay();
                             startTimer();
                         }, 3000);
                     } else {
-                        status.textContent = 'All cycles complete!';
-                        currentCycle = 0;
-                        totalCycles = 0;
+                        el.status.textContent = 'All cycles complete!';
+                        state.currentCycle = 0;
+                        state.totalCycles = 0;
                         updateCycleStatus();
                     }
                 }
             }, 1000);
         }
 
+        // Stop timer
         function stopTimer() {
-            if (!isRunning) return;
+            if (!state.isRunning) return;
 
-            clearInterval(timerId);
-            isRunning = false;
-            startBtn.disabled = false;
-            stopBtn.disabled = true;
-            minutesInput.disabled = false;
-            repeatHoursInput.disabled = false;
-            repeatMinutesInput.disabled = false;
-            status.textContent = 'Paused';
+            clearInterval(state.timerId);
+            state.isRunning = false;
+            el.startBtn.disabled = false;
+            el.stopBtn.disabled = true;
+            el.minutesInput.disabled = false;
+            el.repeatHoursInput.disabled = false;
+            el.repeatMinutesInput.disabled = false;
+            el.status.textContent = 'Paused';
         }
 
+        // Reset timer
         function resetTimer() {
             stopTimer();
-            timeLeft = (parseInt(minutesInput.value) || 6) * 60;
-            currentCycle = 0;
-            totalCycles = 0;
+            state.timeLeft = (parseInt(el.minutesInput.value) || 6) * 60;
+            state.currentCycle = 0;
+            state.totalCycles = 0;
             updateDisplay();
             updateCycleStatus();
-            breakMessage.classList.remove('show');
-            status.textContent = 'Ready';
-            display.classList.remove('warning', 'alarm');
+            el.breakMessage.classList.remove('show');
+            el.status.textContent = 'Ready';
+            el.display.classList.remove('warning', 'alarm');
             calculateRepeatCycles();
         }
 
-        function testSound() {
-            toggleTestSound();
+        // Show popup
+        function showPopup(message) {
+            el.popupMessage.textContent = message;
+            el.popupOverlay.classList.add('show');
         }
 
-        // ===== Event Listeners =====
-        startBtn.addEventListener('click', startTimer);
-        stopBtn.addEventListener('click', stopTimer);
-        resetBtn.addEventListener('click', resetTimer);
-        testBtn.addEventListener('click', testSound);
-        themeToggle.addEventListener('click', toggleTheme);
+        // Close popup
+        function closePopup() {
+            el.popupOverlay.classList.remove('show');
+        }
 
-        minutesInput.addEventListener('input', () => {
-            if (!isRunning) {
-                timeLeft = (parseInt(minutesInput.value) || 6) * 60;
+        // File upload handler
+        el.audioUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Check file size
+            if (file.size > MAX_FILE_SIZE) {
+                showPopup('File too large! Maximum 10MB.');
+                e.target.value = '';
+                return;
+            }
+            
+            el.loading.textContent = 'Loading...';
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const dataUrl = event.target.result;
+                
+                // Check for duplicate
+                if (!saveTrack(file.name, dataUrl)) {
+                    showPopup('You already added that track!');
+                    el.loading.textContent = '';
+                    return;
+                }
+                
+                // Add track
+                tracks.push(dataUrl);
+                const newIndex = tracks.length - 1;
+                
+                // Add button
+                el.trackButtons.appendChild(createTrackButton(newIndex));
+                
+                // Select new track
+                selectTrack(newIndex);
+                
+                el.status.textContent = `Track ${newIndex + 1} added: ${file.name}`;
+                el.loading.textContent = '';
+            };
+            
+            reader.onerror = () => {
+                showPopup('Error loading file. Please try again.');
+                el.loading.textContent = '';
+            };
+            
+            reader.readAsDataURL(file);
+            e.target.value = '';
+        });
+
+        // Event listeners
+        el.startBtn.addEventListener('click', startTimer);
+        el.stopBtn.addEventListener('click', stopTimer);
+        el.resetBtn.addEventListener('click', resetTimer);
+        el.testBtn.addEventListener('click', toggleTestSound);
+        el.themeToggle.addEventListener('click', toggleTheme);
+
+        el.minutesInput.addEventListener('input', () => {
+            if (!state.isRunning) {
+                state.timeLeft = (parseInt(el.minutesInput.value) || 6) * 60;
                 updateDisplay();
                 calculateRepeatCycles();
             }
         });
 
-        repeatHoursInput.addEventListener('input', calculateRepeatCycles);
-        repeatMinutesInput.addEventListener('input', calculateRepeatCycles);
+        el.repeatHoursInput.addEventListener('input', calculateRepeatCycles);
+        el.repeatMinutesInput.addEventListener('input', calculateRepeatCycles);
 
-        // ===== Initialize =====
-        initializeTrackButtons();
+        // Initialize
+        loadStoredTracks();
+        renderTrackButtons();
         updateDisplay();
         calculateRepeatCycles();
     </script>

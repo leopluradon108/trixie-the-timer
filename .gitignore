@@ -1,0 +1,7 @@
+# Ignore all music files
+*.m4a
+*.mp3
+*.wav
+
+# macOS creates this invisible file
+.DS_Store

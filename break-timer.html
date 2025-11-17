@@ -11,39 +11,39 @@
             box-sizing: border-box;
         }
 
-        /* Gruvbox Dark Base */
         :root {
-            --bg: #282828;
-            --bg-soft: #3c3836;
-            --bg-hard: #1d2021;
-            --fg: #ebdbb2;
-            --fg-dim: #a89984;
-            --border: #504945;
-            --accent: #458588;
-            --accent-hover: #83a598;
-            --success: #98971a;
-            --success-hover: #b8bb26;
-            --warning: #fe8019;
-            --danger: #cc241d;
-            --danger-hover: #fb4934;
-            --special: #d79921;
-            --special-hover: #fabd2f;
+            /* Bubblegum (light mode) */
+            --pink: #FFB3D9;
+            --pink-soft: #FFC9E3;
+            --pink-neon: #FF69B4;
+            --white: #FFFFFF;
+            --white-soft: #FFF5F8;
+            --turquoise: #40E0D0;
+            --turquoise-neon: #00CED1;
+            --text: #8B4F6F;
+            --text-dark: #6B3555;
+            --border: #FFE0ED;
+            --bg-gradient: linear-gradient(135deg, #FFC9E3 0%, #FFFFFF 50%, #40E0D0 100%);
         }
 
-        /* Calm - Ocean (Blue/Aqua) */
-        body.calm {
-            --bg: #1d2021;
-            --bg-soft: #282828;
-            --accent: #458588;
-            --accent-hover: #83a598;
-            --success: #689d6a;
-            --success-hover: #8ec07c;
-            --special: #458588;
+        body.dark {
+            /* Candy Raver (dark mode) */
+            --pink: #FF69B4;
+            --pink-soft: #FFB3D9;
+            --pink-neon: #ff1493;
+            --white: #1A1A2E;
+            --white-soft: #16213E;
+            --turquoise: #00FFFF;
+            --turquoise-neon: #0FF0FC;
+            --text: #FFB3D9;
+            --text-dark: #FF69B4;
+            --border: #ff1493;
+            --bg-gradient: linear-gradient(135deg, #1A1A2E 0%, #0F3460 50%, #16213E 100%);
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--fg);
+            background: var(--bg-gradient);
+            color: var(--text);
             font-family: 'Courier New', monospace;
             display: flex;
             justify-content: center;
@@ -54,38 +54,37 @@
         }
 
         .container {
-            background-color: var(--bg-soft);
-            border: 2px solid var(--border);
-            border-radius: 8px;
+            background: var(--white);
+            border: 3px solid var(--pink);
+            border-radius: 20px;
             padding: 40px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.3);
             max-width: 600px;
             width: 100%;
-            transition: all 0.5s ease;
         }
 
         h1 {
-            color: var(--special-hover);
+            color: var(--pink-neon);
             margin-bottom: 30px;
-            font-size: 2em;
-            transition: color 0.5s ease;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
         }
 
         .timer-display {
-            font-size: 4em;
-            color: var(--fg);
+            font-size: 5em;
+            color: var(--text-dark);
             margin: 30px 0;
             font-weight: bold;
             letter-spacing: 0.05em;
         }
 
         .timer-display.warning {
-            color: var(--warning);
+            color: var(--turquoise-neon);
         }
 
         .timer-display.alarm {
-            color: var(--danger-hover);
+            color: var(--pink-neon);
             animation: pulse 0.5s infinite;
         }
 
@@ -103,55 +102,73 @@
         }
 
         button {
-            background-color: var(--accent);
-            color: var(--fg);
+            background: linear-gradient(135deg, var(--pink) 0%, var(--pink-neon) 100%);
+            color: var(--white);
             border: none;
             padding: 15px 30px;
             font-size: 1.1em;
             font-family: 'Courier New', monospace;
+            font-weight: bold;
             cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s;
+            border-radius: 25px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
         }
 
         button:hover {
-            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
         }
 
         button:active {
-            transform: scale(0.95);
+            transform: translateY(0);
         }
 
-        button.start {
-            background-color: var(--success);
-        }
-
-        button.start:hover {
-            background-color: var(--success-hover);
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         button.stop {
-            background-color: var(--danger);
+            background: linear-gradient(135deg, var(--turquoise) 0%, var(--turquoise-neon) 100%);
+            box-shadow: 0 4px 15px rgba(0, 206, 209, 0.3);
         }
 
         button.stop:hover {
-            background-color: var(--danger-hover);
+            box-shadow: 0 6px 20px rgba(0, 206, 209, 0.4);
         }
 
         button.reset {
-            background-color: var(--special);
-        }
-
-        button.reset:hover {
-            background-color: var(--special-hover);
+            background: linear-gradient(135deg, var(--pink-soft) 0%, var(--pink) 100%);
         }
 
         button.test {
-            background-color: #b16286;
+            background: linear-gradient(135deg, var(--turquoise-neon) 0%, var(--turquoise) 100%);
+            box-shadow: 0 4px 15px rgba(0, 206, 209, 0.3);
         }
 
         button.test:hover {
-            background-color: #d3869b;
+            box-shadow: 0 6px 20px rgba(0, 206, 209, 0.4);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--pink-neon);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
         }
 
         .input-group {
@@ -169,27 +186,26 @@
         label {
             display: block;
             margin-bottom: 10px;
-            color: var(--fg);
+            color: var(--text-dark);
             font-size: 1.1em;
+            font-weight: bold;
         }
 
         .inline-label {
-            display: inline;
-            margin: 0 5px;
-            color: var(--fg-dim);
+            color: var(--text);
             font-size: 0.9em;
         }
 
         input[type="number"] {
-            background-color: var(--bg-hard);
-            color: var(--fg);
-            border: 2px solid var(--border);
+            background: var(--white-soft);
+            color: var(--text-dark);
+            border: 2px solid var(--pink);
             padding: 10px;
             font-size: 1.2em;
             width: 120px;
             text-align: center;
             font-family: 'Courier New', monospace;
-            border-radius: 4px;
+            border-radius: 15px;
         }
 
         input[type="number"].small {
@@ -200,53 +216,29 @@
 
         input[type="number"]:focus {
             outline: none;
-            border-color: var(--accent);
-        }
-
-        select {
-            background-color: var(--bg-hard);
-            color: var(--fg);
-            border: 2px solid var(--border);
-            padding: 10px 15px;
-            font-size: 1.1em;
-            font-family: 'Courier New', monospace;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 280px;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        select option {
-            background-color: var(--bg-soft);
-            color: var(--fg);
-        }
-
-        select option:disabled {
-            color: var(--fg-dim);
+            border-color: var(--pink-neon);
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
         }
 
         .repeat-info {
-            color: var(--special);
+            color: var(--turquoise-neon);
             font-size: 0.95em;
             margin: 10px 0;
-            min-height: 20px;
+            font-weight: bold;
         }
 
         .status {
             margin-top: 20px;
-            color: var(--fg-dim);
+            color: var(--text);
             font-size: 1em;
         }
 
         .break-message {
             display: none;
-            color: var(--success-hover);
+            color: var(--pink-neon);
             font-size: 1.5em;
             margin: 20px 0;
+            font-weight: bold;
             animation: fadeIn 0.5s;
         }
 
@@ -255,54 +247,16 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .mood-indicator {
-            color: var(--accent);
-            font-size: 0.9em;
-            margin-top: 5px;
-            font-style: italic;
-        }
-
-        .instructions {
-            background-color: var(--bg-hard);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 15px;
-            margin: 20px 0;
-            font-size: 0.9em;
-            color: var(--fg-dim);
-            text-align: left;
-        }
-
-        .instructions h3 {
-            color: var(--special-hover);
-            margin-bottom: 10px;
-            font-size: 1em;
-        }
-
-        .instructions ul {
-            margin-left: 20px;
-        }
-
-        .instructions li {
-            margin: 5px 0;
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
-<body class="calm">
+<body>
+    <button class="theme-toggle" id="themeToggle">🌙 Candy Raver</button>
+    
     <div class="container">
-        <h1>Break Timer</h1>
-        
-        <div class="input-group">
-            <label for="soundSelect">Sound & Mood:</label>
-            <select id="soundSelect" onchange="changeMood()">
-                <option value="calm">🌊 Ocean Waves - Calm</option>
-            </select>
-            <div class="mood-indicator" id="moodIndicator">Calm & peaceful</div>
-        </div>
+        <h1>💕 Trixie the Timer 💕</h1>
 
         <div class="input-group">
             <label for="minutes">Timer Duration (Minutes):</label>
@@ -323,299 +277,173 @@
         <div class="timer-display" id="display">6:00</div>
 
         <div class="controls">
-            <button class="start" id="startBtn" onclick="startTimer()">Start</button>
-            <button class="stop" id="stopBtn" onclick="stopTimer()" disabled>Stop</button>
-            <button class="reset" id="resetBtn" onclick="resetTimer()">Reset</button>
-            <button class="test" id="testBtn" onclick="testSound()">Test Sound</button>
+            <button class="start" id="startBtn">Start</button>
+            <button class="stop" id="stopBtn" disabled>Stop</button>
+            <button class="reset" id="resetBtn">Reset</button>
+            <button class="test" id="testBtn">Test Sound</button>
         </div>
 
-        <div class="break-message" id="breakMessage">Time for a break!</div>
+        <div class="break-message" id="breakMessage">✨ Time for a break! ✨</div>
         <div class="status" id="status">Ready</div>
         <div class="status" id="cycleStatus"></div>
-
-        <div class="instructions">
-            <h3>📁 Audio File Setup (Optional):</h3>
-            <ul>
-                <li><strong>Built-in:</strong> Soft timer beep (3 gentle tones) plays automatically</li>
-                <li><strong>To use real nature recordings:</strong> Place <strong>lofi-beat-by-syd.m4a</strong> in same folder</li>
-                <li>Timer will use real file if found, otherwise plays soft beep</li>
-            </ul>
-        </div>
     </div>
 
     <script>
+        // ===== Configuration =====
+        const AUDIO_FILE = 'lofi-beat-by-syd.m4a'; // Change this to use a different audio file
+        
+        // ===== State Variables =====
         let timeLeft = 360;
         let timerId = null;
         let isRunning = false;
-        let currentAudio = null;
-        let repeatCycles = 0;
+        let audio = null;
         let currentCycle = 0;
         let totalCycles = 0;
 
+        // ===== DOM Elements =====
         const display = document.getElementById('display');
         const minutesInput = document.getElementById('minutes');
         const repeatHoursInput = document.getElementById('repeatHours');
         const repeatMinutesInput = document.getElementById('repeatMinutes');
-        const soundSelect = document.getElementById('soundSelect');
-        const moodIndicator = document.getElementById('moodIndicator');
         const startBtn = document.getElementById('startBtn');
         const stopBtn = document.getElementById('stopBtn');
         const resetBtn = document.getElementById('resetBtn');
+        const testBtn = document.getElementById('testBtn');
         const status = document.getElementById('status');
         const breakMessage = document.getElementById('breakMessage');
         const repeatInfo = document.getElementById('repeatInfo');
         const cycleStatus = document.getElementById('cycleStatus');
+        const themeToggle = document.getElementById('themeToggle');
 
-        // Audio file paths - place your audio files in same directory as HTML
-        const audioFiles = {
-            calm: 'lofi-beat-by-syd.m4a',
-            focus: 'forest-birds.mp3',
-            energize: 'crackling-fire.mp3',
-            serene: 'gentle-rain.mp3'
-        };
-
-        const moodDescriptions = {
-            calm: 'Calm & peaceful'
-        };
-
-        function changeMood() {
-            const mood = soundSelect.value;
-            document.body.className = mood;
-            moodIndicator.textContent = moodDescriptions[mood];
-            
-            // Play 5-second preview
-            playPreviewSound(mood);
+        // ===== Theme Functions =====
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            themeToggle.textContent = isDark ? '☀️ Bubblegum' : '🌙 Candy Raver';
+            themeToggle.style.background = isDark ? '#00FFFF' : '';
         }
 
-        function playPreviewSound(mood) {
-            // Stop any currently playing audio
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-            }
-            
-            // Try to load external audio file first
-            currentAudio = new Audio(audioFiles[mood]);
-            currentAudio.volume = 0;
-            
-            const fadeInDuration = 0.5;
-            const fadeOutDuration = 0.5;
-            const previewDuration = 5;
-            
-            // Fade in
-            let fadeInInterval = setInterval(() => {
-                if (currentAudio.volume < 0.7) {
-                    currentAudio.volume = Math.min(0.7, currentAudio.volume + 0.05);
-                } else {
-                    clearInterval(fadeInInterval);
-                }
-            }, fadeInDuration * 1000 / 14);
-            
-            currentAudio.play().catch(err => {
-                // If audio file not found, use synthesized sound
-                console.log('Audio file not found, using synthesized sound');
-                generateOceanWaves(5, true); // 5 second preview
-                moodIndicator.textContent = moodDescriptions[mood] + ' (soft timer beep)';
-            });
-            
-            // Schedule fade out and stop
-            setTimeout(() => {
-                if (currentAudio) {
-                    let fadeOutInterval = setInterval(() => {
-                        if (currentAudio && currentAudio.volume > 0.05) {
-                            currentAudio.volume = Math.max(0, currentAudio.volume - 0.05);
-                        } else {
-                            clearInterval(fadeOutInterval);
-                            if (currentAudio) {
-                                currentAudio.pause();
-                                currentAudio.currentTime = 0;
-                            }
-                        }
-                    }, fadeOutDuration * 1000 / 14);
-                }
-            }, (previewDuration - fadeOutDuration) * 1000);
-        }
-
-        function playLofiNatureSound() {
-            const mood = soundSelect.value;
-            
-            // Stop any currently playing audio
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-            }
-            
-            currentAudio = new Audio(audioFiles[mood]);
-            currentAudio.volume = 0;
-            
-            const fadeInDuration = 1.5;
-            
-            // Fade in
-            let fadeInInterval = setInterval(() => {
-                if (currentAudio && currentAudio.volume < 0.7) {
-                    currentAudio.volume = Math.min(0.7, currentAudio.volume + 0.035);
-                } else {
-                    clearInterval(fadeInInterval);
-                }
-            }, fadeInDuration * 1000 / 20);
-            
-            currentAudio.play().catch(err => {
-                // If audio file not found, use soft beep
-                console.log('Audio file not found, using soft timer beep');
-                generateOceanWaves(0, false); // Duration ignored for beep
-            });
-        }
-
-        function generateOceanWaves(duration, isPreview) {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            // Simple soft beep - 3 gentle tones
-            const beepCount = 3;
-            const beepInterval = 0.6; // seconds between beeps
-            
-            for (let i = 0; i < beepCount; i++) {
-                setTimeout(() => {
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.type = 'sine';
-                    oscillator.frequency.value = 440; // A4 note - soft and pleasant
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    // Soft volume with fade in and out
-                    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                    gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.1); // Fade in
-                    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.4); // Fade out
-                    
-                    oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.4);
-                }, i * beepInterval * 1000);
-            }
-        }
-
+        // ===== Calculation Functions =====
         function calculateRepeatCycles() {
             const timerMinutes = parseInt(minutesInput.value) || 6;
             const hours = parseInt(repeatHoursInput.value) || 0;
             const minutes = parseInt(repeatMinutesInput.value) || 0;
-            
             const totalRepeatMinutes = (hours * 60) + minutes;
-            
+
             if (totalRepeatMinutes === 0) {
                 repeatInfo.textContent = 'Single timer (no repeat)';
                 return 1;
             }
-            
+
             const cycles = Math.ceil(totalRepeatMinutes / timerMinutes);
             const actualMinutes = cycles * timerMinutes;
             const actualHours = Math.floor(actualMinutes / 60);
             const actualMins = actualMinutes % 60;
-            
-            let timeStr = '';
-            if (actualHours > 0) {
-                timeStr = `${actualHours}h ${actualMins}m`;
-            } else {
-                timeStr = `${actualMins}m`;
-            }
-            
+            const timeStr = actualHours > 0 ? `${actualHours}h ${actualMins}m` : `${actualMins}m`;
+
             repeatInfo.textContent = `${cycles} cycles (${timeStr} total)`;
             return cycles;
         }
 
         function updateCycleStatus() {
-            if (totalCycles > 1) {
-                cycleStatus.textContent = `Cycle ${currentCycle} of ${totalCycles}`;
-            } else {
-                cycleStatus.textContent = '';
-            }
+            cycleStatus.textContent = totalCycles > 1 ? `Cycle ${currentCycle} of ${totalCycles}` : '';
         }
 
         function updateDisplay() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
             display.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            
+
             display.classList.remove('warning', 'alarm');
-            if (timeLeft <= 10 && timeLeft > 0) {
-                display.classList.add('warning');
-            } else if (timeLeft === 0) {
-                display.classList.add('alarm');
+            if (timeLeft <= 10 && timeLeft > 0) display.classList.add('warning');
+            else if (timeLeft === 0) display.classList.add('alarm');
+        }
+
+        function playSound() {
+            if (audio) {
+                audio.pause();
+                audio.currentTime = 0;
             }
+            
+            audio = new Audio();
+            audio.src = AUDIO_FILE;
+            
+            const canPlayM4a = audio.canPlayType('audio/mp4');
+            if (!canPlayM4a) {
+                console.warn('Browser may not support m4a format');
+            }
+            
+            audio.play().catch(err => {
+                console.error('Audio playback failed:', err);
+                status.textContent = 'Audio file not found or format not supported';
+            });
         }
 
         function startTimer() {
-            if (!isRunning) {
-                if (currentCycle === 0) {
-                    totalCycles = calculateRepeatCycles();
-                    currentCycle = 1;
-                    updateCycleStatus();
-                }
-                
-                if (timeLeft === 0) {
-                    const minutes = parseInt(minutesInput.value) || 6;
-                    timeLeft = minutes * 60;
-                }
-                
-                isRunning = true;
-                startBtn.disabled = true;
-                stopBtn.disabled = false;
-                minutesInput.disabled = true;
-                repeatHoursInput.disabled = true;
-                repeatMinutesInput.disabled = true;
-                soundSelect.disabled = true;
-                status.textContent = 'Running...';
-                breakMessage.classList.remove('show');
-                
-                timerId = setInterval(() => {
-                    timeLeft--;
-                    updateDisplay();
-                    
-                    if (timeLeft <= 0) {
-                        stopTimer();
-                        playLofiNatureSound();
-                        breakMessage.classList.add('show');
-                        
-                        if (currentCycle < totalCycles) {
-                            currentCycle++;
-                            status.textContent = `Cycle ${currentCycle - 1} complete! Starting cycle ${currentCycle}...`;
-                            updateCycleStatus();
-                            
-                            setTimeout(() => {
-                                const minutes = parseInt(minutesInput.value) || 6;
-                                timeLeft = minutes * 60;
-                                updateDisplay();
-                                startTimer();
-                            }, 3000);
-                        } else {
-                            status.textContent = 'All cycles complete!';
-                            currentCycle = 0;
-                            totalCycles = 0;
-                            updateCycleStatus();
-                        }
-                    }
-                }, 1000);
+            if (isRunning) return;
+
+            if (currentCycle === 0) {
+                totalCycles = calculateRepeatCycles();
+                currentCycle = 1;
+                updateCycleStatus();
             }
+
+            if (timeLeft === 0) timeLeft = (parseInt(minutesInput.value) || 6) * 60;
+
+            isRunning = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            minutesInput.disabled = true;
+            repeatHoursInput.disabled = true;
+            repeatMinutesInput.disabled = true;
+            status.textContent = 'Running...';
+            breakMessage.classList.remove('show');
+
+            timerId = setInterval(() => {
+                timeLeft--;
+                updateDisplay();
+
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    playSound();
+                    breakMessage.classList.add('show');
+
+                    if (currentCycle < totalCycles) {
+                        currentCycle++;
+                        status.textContent = `Cycle ${currentCycle - 1} complete! Starting cycle ${currentCycle}...`;
+                        updateCycleStatus();
+
+                        setTimeout(() => {
+                            timeLeft = (parseInt(minutesInput.value) || 6) * 60;
+                            updateDisplay();
+                            startTimer();
+                        }, 3000);
+                    } else {
+                        status.textContent = 'All cycles complete!';
+                        currentCycle = 0;
+                        totalCycles = 0;
+                        updateCycleStatus();
+                    }
+                }
+            }, 1000);
         }
 
         function stopTimer() {
-            if (isRunning) {
-                clearInterval(timerId);
-                isRunning = false;
-                startBtn.disabled = false;
-                stopBtn.disabled = true;
-                minutesInput.disabled = false;
-                repeatHoursInput.disabled = false;
-                repeatMinutesInput.disabled = false;
-                soundSelect.disabled = false;
-                status.textContent = 'Paused';
-            }
+            if (!isRunning) return;
+
+            clearInterval(timerId);
+            isRunning = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            minutesInput.disabled = false;
+            repeatHoursInput.disabled = false;
+            repeatMinutesInput.disabled = false;
+            status.textContent = 'Paused';
         }
 
         function resetTimer() {
             stopTimer();
-            const minutes = parseInt(minutesInput.value) || 6;
-            timeLeft = minutes * 60;
+            timeLeft = (parseInt(minutesInput.value) || 6) * 60;
             currentCycle = 0;
             totalCycles = 0;
             updateDisplay();
@@ -628,18 +456,21 @@
 
         function testSound() {
             status.textContent = 'Testing sound...';
-            playLofiNatureSound();
+            playSound();
             setTimeout(() => {
-                if (!isRunning) {
-                    status.textContent = 'Ready';
-                }
+                if (!isRunning) status.textContent = 'Ready';
             }, 2000);
         }
 
+        startBtn.addEventListener('click', startTimer);
+        stopBtn.addEventListener('click', stopTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        testBtn.addEventListener('click', testSound);
+        themeToggle.addEventListener('click', toggleTheme);
+
         minutesInput.addEventListener('input', () => {
             if (!isRunning) {
-                const minutes = parseInt(minutesInput.value) || 6;
-                timeLeft = minutes * 60;
+                timeLeft = (parseInt(minutesInput.value) || 6) * 60;
                 updateDisplay();
                 calculateRepeatCycles();
             }
@@ -650,7 +481,6 @@
 
         updateDisplay();
         calculateRepeatCycles();
-        changeMood();
     </script>
 </body>
 </html>

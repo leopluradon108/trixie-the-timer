@@ -1,11 +1,11 @@
 # Trixie the Timer 💕
 
-Optimized break timer with dual themes, multi-track audio, and localStorage persistence.
+A customizable timer with multi-track audio, two themes, and .
 
 ## Features
 
-- **Customizable duration**: 1-999 minutes (default 6)
-- **Repeat cycles**: Auto-repeat for set hours/minutes (rounds to nearest multiple)
+- **Customizable duration**: 1+ minutes in whole numbers (default 6)
+- **Repeat cycles**: Auto-repeat at set hours/minutes (rounds to nearest multiple)
 - **Dual themes**: Bubblegum (light) and Candy Raver (dark) with pink/turquoise/cyan palettes
 - **Multi-track audio**: Upload unlimited tracks via browser interface
 - **localStorage persistence**: Uploaded tracks saved between sessions

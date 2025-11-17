@@ -151,6 +151,18 @@
             box-shadow: 0 6px 20px rgba(0, 206, 209, 0.4);
         }
 
+        button.track {
+            background: linear-gradient(135deg, var(--pink-soft) 0%, var(--pink-neon) 100%);
+            padding: 10px 15px;
+            font-size: 0.9em;
+            min-width: 80px;
+        }
+
+        button.track.active {
+            background: linear-gradient(135deg, var(--special) 0%, var(--special-hover) 100%);
+            box-shadow: 0 4px 15px rgba(215, 153, 33, 0.5);
+        }
+
         .theme-toggle {
             position: absolute;
             top: 20px;
@@ -277,26 +289,40 @@
         <div class="timer-display" id="display">6:00</div>
 
         <div class="controls">
-            <button class="start" id="startBtn">Start</button>
-            <button class="stop" id="stopBtn" disabled>Stop</button>
-            <button class="reset" id="resetBtn">Reset</button>
+            <div id="trackButtons"></div>
             <button class="test" id="testBtn">Test Sound</button>
         </div>
 
-        <div class="break-message" id="breakMessage">✨ Time for a break! ✨</div>
+        <div class="controls">
+            <button class="start" id="startBtn">Start</button>
+            <button class="stop" id="stopBtn" disabled>Stop</button>
+            <button class="reset" id="resetBtn">Reset</button>
+        </div>
+
+        <div class="break-message" id="breakMessage">✨ Zoom out and breathe ✨</div>
         <div class="status" id="status">Ready</div>
         <div class="status" id="cycleStatus"></div>
     </div>
 
     <script>
         // ===== Configuration =====
-        const AUDIO_FILE = 'lofi-beat-by-syd.m4a'; // Change this to use a different audio file
+        const AUDIO_TRACKS = [
+            'lofi-beat-by-syd.m4a',  // Track 1
+         //  'track2.mp3',             // Track 2
+         //  'track3.mp3',             // Track 3
+         //   'track4.mp3',             // Track 4
+         //   'track5.mp3',             // Track 5
+         //   'track6.mp3'              // Track 6
+        ];
+        let currentTrack = 0; // Default to Track 1
         
         // ===== State Variables =====
         let timeLeft = 360;
         let timerId = null;
         let isRunning = false;
         let audio = null;
+        let isAudioPlaying = false;
+        let pauseTimer = null;
         let currentCycle = 0;
         let totalCycles = 0;
 
@@ -314,6 +340,32 @@
         const repeatInfo = document.getElementById('repeatInfo');
         const cycleStatus = document.getElementById('cycleStatus');
         const themeToggle = document.getElementById('themeToggle');
+        const trackButtonsContainer = document.getElementById('trackButtons');
+
+        // ===== Initialize Track Buttons =====
+        function initializeTrackButtons() {
+            AUDIO_TRACKS.forEach((track, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'track';
+                btn.textContent = `Track ${index + 1}`;
+                btn.onclick = () => selectTrack(index);
+                if (index === currentTrack) btn.classList.add('active');
+                trackButtonsContainer.appendChild(btn);
+            });
+        }
+
+        function selectTrack(trackIndex) {
+            currentTrack = trackIndex;
+            // Update button states
+            const trackButtons = trackButtonsContainer.querySelectorAll('.track');
+            trackButtons.forEach((btn, index) => {
+                btn.classList.toggle('active', index === trackIndex);
+            });
+            // Reset audio if currently playing
+            if (audio && isAudioPlaying) {
+                stopAudio();
+            }
+        }
 
         // ===== Theme Functions =====
         function toggleTheme() {
@@ -366,7 +418,7 @@
             }
             
             audio = new Audio();
-            audio.src = AUDIO_FILE;
+            audio.src = AUDIO_TRACKS[currentTrack];
             
             const canPlayM4a = audio.canPlayType('audio/mp4');
             if (!canPlayM4a) {
@@ -377,6 +429,65 @@
                 console.error('Audio playback failed:', err);
                 status.textContent = 'Audio file not found or format not supported';
             });
+        }
+
+        function stopAudio() {
+            if (audio) {
+                audio.pause();
+                audio.currentTime = 0;
+                isAudioPlaying = false;
+                testBtn.textContent = 'Test Sound';
+                if (pauseTimer) {
+                    clearTimeout(pauseTimer);
+                    pauseTimer = null;
+                }
+            }
+        }
+
+        function toggleTestSound() {
+            if (!audio || audio.paused) {
+                // Start playing
+                if (audio) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }
+                
+                audio = new Audio();
+                audio.src = AUDIO_TRACKS[currentTrack];
+                
+                audio.play().catch(err => {
+                    console.error('Audio playback failed:', err);
+                    status.textContent = 'Audio file not found or format not supported';
+                    return;
+                });
+                
+                isAudioPlaying = true;
+                testBtn.textContent = 'Pause Sound';
+                
+                // Clear any existing pause timer
+                if (pauseTimer) {
+                    clearTimeout(pauseTimer);
+                    pauseTimer = null;
+                }
+                
+                // Auto-stop when audio ends
+                audio.onended = () => {
+                    stopAudio();
+                };
+            } else {
+                // Pause
+                audio.pause();
+                isAudioPlaying = false;
+                testBtn.textContent = 'Test Sound';
+                
+                // Set 10-second timer to reset
+                pauseTimer = setTimeout(() => {
+                    if (audio) {
+                        audio.currentTime = 0;
+                        pauseTimer = null;
+                    }
+                }, 10000);
+            }
         }
 
         function startTimer() {
@@ -455,13 +566,10 @@
         }
 
         function testSound() {
-            status.textContent = 'Testing sound...';
-            playSound();
-            setTimeout(() => {
-                if (!isRunning) status.textContent = 'Ready';
-            }, 2000);
+            toggleTestSound();
         }
 
+        // ===== Event Listeners =====
         startBtn.addEventListener('click', startTimer);
         stopBtn.addEventListener('click', stopTimer);
         resetBtn.addEventListener('click', resetTimer);
@@ -479,6 +587,8 @@
         repeatHoursInput.addEventListener('input', calculateRepeatCycles);
         repeatMinutesInput.addEventListener('input', calculateRepeatCycles);
 
+        // ===== Initialize =====
+        initializeTrackButtons();
         updateDisplay();
         calculateRepeatCycles();
     </script>

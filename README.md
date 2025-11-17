@@ -1,19 +1,19 @@
 # Trixie the Timer 💕
 
-A customizable timer with multi-track audio, two themes, and .
+A customizable timer with multi-track audio, light and dark themes, and .
 
 ## Features
 
-- **Customizable duration**: 1+ minutes in whole numbers (default 6)
-- **Repeat cycles**: Auto-repeat at set hours/minutes (rounds to nearest multiple)
-- **Dual themes**: Bubblegum (light) and Candy Raver (dark) with pink/turquoise/cyan palettes
-- **Multi-track audio**: Upload unlimited tracks via browser interface
-- **localStorage persistence**: Uploaded tracks saved between sessions
-- **Track management**: Delete tracks with hover button (1.5s delay tooltip)
+- **Customizable duration**: Set timer duration to 1+ minutes in whole numbers (default 6)
+- **Repeat cycles**: Set cycles; auto-repeat for 0+ minutes/hours in whole numbers (rounds number of cycles up to nearest multiple)
+- **Themes**: Bubblegum (light) and Candy Raver (dark) with pink/turquoise/cyan palettes
+- **Multi-track audio**: Upload 5 tracks via browser interface in addition to the default "Track 1"
+- **localStorage persistence**: Uploaded tracks save between sessions
+- **Track management**: Delete tracks with minus button
 - **Duplicate detection**: Themed popup prevents adding same file twice
 - **File size limit**: 10MB per track with validation
 - **Loading indicator**: Shows upload progress
-- **Test sound**: Preview tracks with pause/resume (10s auto-reset)
+- **Test sound**: Preview tracks with test button
 - **Visual warnings**: Turquoise at 10s, pulsing pink at 0s
 - **Cycle tracking**: Shows current cycle number
 
@@ -21,7 +21,7 @@ A customizable timer with multi-track audio, two themes, and .
 
 1. Open `timer.html` in browser
 2. Click "+ Add Track" to upload audio files
-3. Supported formats: m4a, mp3, wav, ogg
+3. Supported formats: m4a, mp3, wav
 
 ## Usage
 
@@ -35,7 +35,7 @@ A customizable timer with multi-track audio, two themes, and .
 ## Track Management
 
 - **Add**: Click "+ Add Track" button, select audio file
-- **Delete**: Hover track button for 1.5s, click minus sign (−)
+- **Delete**: Click minus sign (−)
 - **Default**: Track 1 (makes-sense.m4a) cannot be deleted
 - **Storage**: ~5-10MB localStorage limit (several songs)
 - **Duplicates**: Popup warns if filename already exists
